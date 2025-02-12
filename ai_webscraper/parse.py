@@ -2,10 +2,14 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessage
 import time
+import os
 from openai import OpenAIError
 
-# Initialize OpenAI model with hardcoded API key
-model = ChatOpenAI(model_name="gpt-4-turbo", openai_api_key="{openai_api_key}")
+# Retrieve API key from environment variable
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize OpenAI model securely
+model = ChatOpenAI(model_name="gpt-4-turbo", openai_api_key=openai_api_key)
 
 template = (
     "You are tasked with extracting specific information from the following text content: {dom_content}. "
@@ -48,4 +52,4 @@ def parse_with_openai(dom_chunks, parse_description):
             print(f"Skipping batch {i} due to repeated OpenAI API errors.")
             parsed_results.append("")  # Append empty result if all retries fail
     
-    return "/n".join(parsed_results)
+    return "\n".join(parsed_results)
